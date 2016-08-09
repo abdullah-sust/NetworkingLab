@@ -1,0 +1,30 @@
+Switch>enable 
+Switch#config t
+Enter configuration commands, one per line.  End with CNTL/Z.
+
+Switch(config)#hostname S2
+S2(config)#service password-encryption
+S2(config)#banner motd #No unauthorized access allowed!#
+S2(config)#username admin secret danscourses
+S2(config)#enable secret class12345
+
+S2(config)#line console 0
+S2(config-line)#login local
+S2(config-line)#exit
+
+S2(config)#line vty 0 15
+S2(config-line)#login local 
+S2(config-line)#exit
+
+S2(config)#ip domain-name danscourses.com
+S2(config)#ip default-gateway 192.168.4.193
+
+S2(config)#int vlan 1
+S2(config-if)#ip add 192.168.4.206 255.255.255.240
+S2(config-if)#exit
+
+S2(config)#crypto key generate rsa
+S2(config)#ip  ssh version 2
+S2(config)#exit
+
+S2#copy running-config startup-config 

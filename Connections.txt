@@ -1,0 +1,27 @@
+Router -> 2811
+Switch -> 2960
+
+NM-2FE2W -> increase the the number of ports to connect more switches in a router.............
+HWIC-2T -> increase the the number of serial cable for router to router connections......
+
+PC to Switch -> Copper Straight-Through
+Switch to Router -> Copper Straight-Through
+Router to Router -> Copper Cross-Over & Serial DCE both correct, Serial provides high 
+performance......
+
+*two extra location will be needed....................
+------------------------------------------------------
+enable
+configure terminal
+(config)#interface fastEthernet 0/0
+(config)#interface serial 0/3/0
+(config-if)#ip address gateway subnet
+(config-if)#no shutdown
+(config)#ip route net-address subnet s0/0/0
+------------------------------------------------------
+
+
+
+
+
+

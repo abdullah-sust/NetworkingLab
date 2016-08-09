@@ -1,0 +1,9 @@
+ipv4
+ip:192.168.4.70
+subnet:255.255.255.192
+gateway:192.168.4.65
+
+ipv6
+ip:2001:DB8:CCCC:1::B/64
+local:FE80::1
+gateway:FE80::1

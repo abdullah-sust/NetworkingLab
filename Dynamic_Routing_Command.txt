@@ -1,0 +1,269 @@
+Dynamic routing RIP:
+--------------------
+enable
+configure terminal
+router rip
+version 2
+
+network net-address
+network net-address
+passive-interface f0/0
+redistribute static
+default-information originate
+no auto-summary
+
+exit
+exit
+
+copy running-config  startup-config
+exit
+
+Dynamic routing OSPF:
+---------------------
+enable
+configure terminal
+router ospf 10
+network net-inter-address 0.0.0.0 area 0
+passive-interface f0/0
+default-information originate
+
+exit
+exit
+
+copy running-config  startup-config
+exit
+
+--------------------------------
+clock rate ----
+bandwidth --
+interface lookback0
+ip address (ip-address) subnet
+no shutdown
+ip ospf cost --
+
+int vty 0
+login local
+password ----
+exit
+
+--------------------------------
+Router>
+Router>enable
+Router#configure terminal
+Router(config)#interface g0/0
+Router(config-if)#ip address 192.168.1.126 255.255.255.224
+Router(config-if)#description IT Department LAN
+Router(config-if)#no shutdown
+Router(config-if)#exit
+Router(config)#interface g0/1
+Router(config-if)#ip address 192.168.1.158 255.255.255.240
+Router(config-if)#description Administration LAN
+Router(config-if)#no shutdown
+Router(config-if)#exit
+Router(config)#ipv6 unicast-routing
+Router(config)#interface g0/0
+Router(config-if)#ipv6 address 2001:db8:acad:A::1/64
+Router(config-if)#ipv6 address FE80::1 link-local
+Router(config-if)#no shutdown
+Router(config-if)#exit
+Router(config)#interface g0/1
+Router(config-if)#ipv6 address 2001:db8:acad:B::1/64
+Router(config-if)#ipv6 address FE80::1 link-local
+Router(config-if)#no shutdown
+Router(config-if)#exit
+
+Router(config)#
+Router(config)#hostname Middle
+Middle(config)#Enable secret class12345
+Middle(config)#line console 0
+Middle(config-line)#password ccna5.net2014
+Middle(config-line)#login
+Middle(config-line)#exit
+Middle(config)#line vty 0 15
+Middle(config-line)#password ccna5.net2014
+Middle(config-line)#login
+Middle(config-line)#exit
+Middle(config)#line aux 0
+Middle(config-line)#password ccna5.net2014
+Middle(config-line)#login
+Middle(config-line)#exit
+Middle(config)#
+Middle(config)#Banner motd “Authorized Access Only”
+Middle(config)#security password min-length 10
+Middle(config)#service password-encryption
+Middle(config)#ip domain-name ccna5.net
+Middle(config)#username cisco secret ccna5.net2014
+Middle(config)#crypto key generate rsa
+The name for the keys will be: Middle.cisco.local
+Choose the size of the key modulus in the range of 360 to 2048 for your
+General Purpose Keys. Choosing a key modulus greater than 512 may take
+a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable…[OK]
+
+Middle(config)#line vty 0 15
+Middle(config-line)#login local
+Middle(config-line)#transport input ssh
+Middle(config-line)#exit
+Middle(config)#
+
+Middle# copy running-config startup-config
+
+—————————————–------------------------------------------------------
+Basic Configuration:
+===================
+
+1. Configure hostname
+---------------------
+Router>enable
+Router#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname SUST
+
+2. Configure password to enter into Priviledge Exec Mode
+--------------------------------------------------------
+SUST(config)#enable password cisco
+
+To set encrypted password.
+SUST(config)#enable secret cisco
+
+
+3. Restrict access to User Executable Mode through console 0
+------------------------------------------------------------
+SUST(config)#line console 0
+SUST(config-line)#password cisco
+SUST(config-line)#login
+SUST(config-line)#exit
+
+
+4. Restrict remote access to User Executable Mode through line vty
+------------------------------------------------------------------
+SUST(config)#line vty 0 4
+SUST(config-line)#password cisco
+SUST(config-line)#login
+SUST(config-line)#exit
+
+5. Configure Ip address:
+------------------------
+SUST(config)#interface fastEthernet 0/0
+SUST(config-if)#ip address 192.168.1.1 255.255.255.0
+SUST(config-if)#description User Lan
+SUST(config-if)#no shut
+
+SUST(config)#interface fa0/1
+SUST(config-if)#ip address 172.16.0.1 255.255.0.0
+SUST(config-if)#description Server Lan
+SUST(config-if)#no shut
+
+6. Configure password-encryption Service:
+-----------------------------------------
+SUST(config)#service password-encryption 
+
+7. Disable Ip-Domain Lookup:
+----------------------------
+SUST(config)#no ip domain-lookup
+
+8. Configure minimum password length:
+-------------------------------------
+SUST(config)#security passwords min-length 8
+
+9. Set Banner message:
+----------------------
+SUST(config)#banner motd #Unauthorized access prohibited!#
+
+10. Configure SSH:
+------------------
+a. Set up Ip-domain Name:
+-------------------------
+SUST(config)#ip domain-name sust.edu
+
+b. Generate a Crypto key:
+-------------------------
+SUST(config)#crypto key generate rsa
+
+c. To see the generated key:
+----------------------------
+SUST#show crypto key mypubkey rsa
+
+d. To enable ssh in line vty 0 4:
+---------------------------------
+SUST(config)#line vty 0 4
+SUST(config-line)#transport input ssh
+SUST(config-line)#exit
+
+11. Copy Running configuration file to startup configuration file:
+------------------------------------------------------------------
+SUST#copy running-config startup-config 
+
+TO restart router:
+------------------
+SUST#reload
+
+12. Backing up Running config to TFTP (Trivial File Transfer Protocol):
+-----------------------------------------------------------------------
+SUST#copy running-config tftp: 
+Address or name of remote host []? 172.16.0.3
+Destination filename [SUST-confg]? 
+
+Writing running-config....!!
+[OK - 831 bytes]
+
+831 bytes copied in 3.016 secs (275 bytes/sec)
+SUST#
+
+13. Delete startup config:
+--------------------------
+SUST#erase startup-config
+
+14. Show interfaces, ping, tracert:
+----------------------------------
+
+SUST#show ip interface brief
+SUST#ping 172.16.0.2
+SUST#traceroute 172.16.0.3
+
+15. ARP Table add/delete:
+--------------------------
+PC>arp -a
+PC>arp -d
+
+16. Basic Switch Configuration:
+-------------------------------
+SW1(config)#interface vlan 1
+SW1(config-if)#ip address 192.168.0.4 255.255.255.0
+SW1(config-if)#no shutdown
+
+SW1(config)#ip default-gateway 192.168.0.1
+
+EIGRP
+1. Configure EIGRP on the R1 Router :
+  R1(config)#router eigrp 1 /ospf 1
+  
+2. Verify EIGRP Operation:
+   1.View neighbors :
+     R1#show ip eigrp neighbors
+   2.View routing protocol information :
+     R1#show ip protocols 
+
+3.bandwidth :
+   R3(config)#interface serial0/0/1 
+   R3(config-if)#bandwidth 1024
+4. cost : 
+     R3(config)#interface serial0/0/0
+	 R3(config-if)#ip ospf cost 1562 
+	 R3(config-if)#interface serial0/0/1
+	 R3(config-if)#ip ospf cost 1562
+   
+5.Disable automatic summarization on all three routers with the no auto-summary command :
+   R1(config)#router eigrp 1 
+   R1(config-router)#no auto-summary 
+6.loopback :
+  R1(config)#interface loopback 0 
+  R1(config-if)#ip address 10.1.1.1 255.255.255.255  
+7.  
+  
+
+
+
+
